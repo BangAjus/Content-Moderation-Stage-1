@@ -21,7 +21,7 @@ def model_loader(model_code='clip'):
         model = Blip2ForConditionalGeneration.from_pretrained("Salesforce/blip2-opt-2.7b", 
                                                               torch_dtype=torch.float16)
     else:
-        print(f"no model such as {model_name}")
+        print(f"no model code such as {model_code}")
         
     return model, processor, model_code
 
