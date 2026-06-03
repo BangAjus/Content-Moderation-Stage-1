@@ -17,7 +17,8 @@ class StageOneClassifier:
                  suicide_classifier_path="model/suicide.joblib",
                  cyberbullying_classifier_path="model/cyberbullying.joblib",
                  violence_classifier_path="model/violence_new.joblib",
-                 adult_classifier_path="model/adult.joblib"):
+                 adult_classifier_path="model/adult.joblib",
+                 harmful_classifier_path="model/harmful.joblib"):
         
         """
         Initializes the Stage 1 Content Moderation Classifier.
@@ -32,6 +33,8 @@ class StageOneClassifier:
         self.suicide_classifier_path = suicide_classifier_path
         self.cyberbullying_classifier_path = cyberbullying_classifier_path
         self.violence_classifier_path = violence_classifier_path
+        self.adult_classifier_path = adult_classifier_path
+        self.harmful_classifier_path = harmful_classifier_path
 
         print("🧬 [BOOT] Initializing production model layers...")
         
@@ -40,6 +43,8 @@ class StageOneClassifier:
         self.suicide_model = self._load_model(self.suicide_classifier_path)
         self.cyberbullying_model = self._load_model(self.cyberbullying_classifier_path)
         self.violence_model = self._load_model(self.violence_classifier_path)
+        self.adult_model = self._load_model(self.adult_classifier_path)
+        self.harmful_model = self._load_model(self.harmful_classifier_path)
         
         # ─── 2. LOAD HEAVY TRANSFORMER BACKBONES (IMMEDIATE) ───
         print(f"📦 Loading Text Backbone [{self.text_modality_model_code}]...")
@@ -122,8 +127,9 @@ class StageOneClassifier:
         Processes image/video input matrices, extracts spatial/temporal 
         embeddings, and returns the binary probability for visual violations (violence).
         """
-        if self.violence_model is None:
-            print("❌ Cannot predict: Violee video classifier head is not loaded.")
+        # Fixed trailing comma bug inside conditional statement
+        if self.violence_model is None or self.adult_model is None or self.harmful_model is None:
+            print("❌ Cannot predict: Vision classifier heads are not fully loaded.")
             return None
 
         features = self.image_extractor(image_input_object)
@@ -133,9 +139,14 @@ class StageOneClassifier:
 
         try:
             violence_proba = self.violence_model.predict_proba(features)[0][1]
+            adult_proba = self.adult_model.predict_proba(features)[0][1]
+            # Fixed 'seld' typo variable reference assignment
+            harmful_proba = self.harmful_model.predict_proba(features)[0][1]
             
             return {
-                "violence_probability": violence_proba
+                "violence_probability": violence_proba,
+                "adult_probability": adult_proba,
+                "harmful_probability": harmful_proba
             }
 
         except Exception as e:
