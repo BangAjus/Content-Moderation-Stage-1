@@ -6,13 +6,15 @@ channels:
 dependencies:
   - python=3.13.9
   - pip
-  - opencv==4.12.0
-  - scikit-learn==1.7.2
-  - xgboost==3.1.2
-  - joblib==1.5.2
-  - numpy==2.3.5
+  - opencv=4.12.0       # Fixed: Switched to single '=' for Conda
+  - scikit-learn=1.7.2   # Fixed: Switched to single '=' for Conda
+  - xgboost=3.1.2        # Fixed: Switched to single '=' for Conda
+  - joblib=1.5.2         # Fixed: Switched to single '=' for Conda
+  - numpy=2.3.5          # Fixed: Switched to single '=' for Conda
   - pip:
-      - torch --index-url https://download.pytorch.org/whl/cpu
+      # OPTIONAL: Uncomment the line below ONLY if building a CPU-only Linux Docker container
+      # - --index-url https://download.pytorch.org/whl/cpu 
+      - torch            # Fixed: Kept clean so it auto-detects Mac MPS locally or native CPU in Docker
       - transformers==4.49.0
       - datasets==4.8.2
       - mlflow==3.13.0
