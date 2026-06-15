@@ -1,0 +1,16 @@
+# Ignore local experiment databases and tracking states
+mlflow.db
+mlflow.db-journal
+mlruns/
+
+# Ignore Jupyter Notebook sandboxes
+*.ipynb
+**/.ipynb_checkpoints/
+
+# Ignore Python runtime environment junk
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.git/
+.gitignore
